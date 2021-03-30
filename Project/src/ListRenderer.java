@@ -1,9 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Ankit on 8/6/2020.
- */
+// Created on: 8/6/2020
 public class ListRenderer extends JLabel implements ListCellRenderer<String> {
 
     public ListRenderer(){

@@ -1,8 +1,7 @@
 import java.util.Comparator;
 
-/**
- * Created by Ankit on 7/25/2020.
- */
+// Created on: 7/25/2020
+
 public class ItemModel {
      private String storeName;
      private String item;

@@ -1,6 +1,4 @@
-/**
- * Created by Ankit on 7/24/2020.
- */
+// Created on 7/24/2020
 public class StoreModel {
 
     final String storeName;

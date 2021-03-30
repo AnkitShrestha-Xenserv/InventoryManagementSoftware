@@ -3,9 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-/**
- * Created by Ankit on 8/12/2020.
- */
+// Created on 8/12/2020
 class Cart extends JPanel {
 
     private static int TRANSACTION = 1;

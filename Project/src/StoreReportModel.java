@@ -1,8 +1,6 @@
 import java.sql.Timestamp;
 
-/**
- * Created by Ankit on 3/28/2021.
- */
+// Created on: 3/28/2021
 public class StoreReportModel {
     private String item;
     private Double quantity;

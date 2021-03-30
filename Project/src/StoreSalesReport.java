@@ -4,9 +4,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by Ankit on 3/28/2021.
- */
+// Created on: 3/28/2021
 public class StoreSalesReport extends JFrame {
     private final Repository repository;
     private final String storeName;
@@ -23,20 +21,47 @@ public class StoreSalesReport extends JFrame {
         salesReportLabel.setFont(new Font("Serif", Font.BOLD, 30));
 
         setTitle("Sales Report");
-        setResizable(false);
+
+        // SETUP TABLE
         JTable table = new JTable();
         Object[]columns = {"Sn","Item","Quantity","Price","Type","Sales Date","Buyer Name","Buyer Address", "Buyer Phone Number"};
         model = new DefaultTableModel();
         model.setColumnIdentifiers(columns);
         table.setModel(model);
         row = new Object[9];
+
+        // ADD TABLE ROW FROM LIST
         storeReportModelList.forEach(this::addTableRow);
 
+        buildTableUI(table);
+
+        JScrollPane pane=new JScrollPane();
+
+        pane.getViewport().add(table);
+        // MANAGE POSITIONS
+        pane.setBounds(20,50,1460,600);
+        salesReportLabel.setBounds(600,10,200,40);
+
+        // ADD WIDGETS TO SCREEN
+        add(pane);
+        add(salesReportLabel);
+
+        // SETUP PANEL
+        setResizable(false);
+        setSize(1500,700);
+        setLocationRelativeTo(null);
+        setLayout(null);
+        setVisible(true);
+    }
+
+    private void buildTableUI(JTable table) {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         for(int x=0;x<9;x++){
             table.getColumnModel().getColumn(x).setCellRenderer( centerRenderer );
         }
+
+        table.getTableHeader().setReorderingAllowed(false);
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 22));
         table.getTableHeader().setOpaque(true);
         table.getTableHeader().setBackground(new Color(32, 136, 203));
@@ -51,20 +76,6 @@ public class StoreSalesReport extends JFrame {
         table.getColumnModel().getColumn(2).setMaxWidth(400);
         table.getColumnModel().getColumn(3).setMaxWidth(150);
         table.getColumnModel().getColumn(4).setMaxWidth(250);
-
-        JScrollPane pane=new JScrollPane();
-
-        pane.getViewport().add(table);
-        pane.setBounds(20,50,1460,600);
-        salesReportLabel.setBounds(600,10,200,40);
-
-        add(pane);
-        add(salesReportLabel);
-
-        setSize(1500,700);
-        setLocationRelativeTo(null);
-        setLayout(null);
-        setVisible(true);
     }
 
     void addTableRow(StoreReportModel storeReportModel){

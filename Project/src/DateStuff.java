@@ -2,9 +2,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 
-/**
- * Created by Ankit on 3/27/2021.
- */
+// Created on: 3/27/2021
 public class DateStuff{
 //    public static void main(String[] args) {
 //        String s = (new Timestamp((new Date()).getTime())).toString().substring(0,19);

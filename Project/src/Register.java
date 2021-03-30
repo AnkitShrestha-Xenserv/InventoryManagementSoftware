@@ -3,9 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-/**
- * Created by Ankit on 7/24/2020.
- */
+// Created on: 7/24/2020
 class Register {
 
     private Repository repository = new Repository();
@@ -25,43 +23,49 @@ class Register {
     private JTextField passwordField = new JTextField();
     private JTextField retypePasswordField = new JTextField();
 
-    void register(Home home){
+    void register(Home home) {
 
         JButton confirmButton = new JButton("Confirm");
 
         confirmButton.addActionListener((ActionEvent e) -> {
-                if(checkEmpty()){
-                    JOptionPane.showMessageDialog(frame,"Please Fill out all The Fields");
-                }else{
-                    if(!repository.checkDuplicateStoreName(storeNameField.getText())){
-                        JOptionPane.showMessageDialog(frame,"Store Name Already Exists");
-                    }else{
-                        if(phoneNumberField.getText().length()<7 || phoneNumberField.getText().length()>10){
-                            JOptionPane.showMessageDialog(frame,"Invalid Phone Number");
-                        }else{
-                            if(!passwordField.getText().equals(retypePasswordField.getText())){
-                                JOptionPane.showMessageDialog(frame,"Passwords do not Match");
-                            }else{
-                                if(!(repository.addStoreData(new StoreModel(
-                                        storeNameField.getText(),
-                                        storeOwnerNameField.getText(),
-                                        phoneNumberField.getText(),
-                                        addressField.getText(),
-                                        passwordField.getText()))>0)){
-                                    JOptionPane.showMessageDialog(frame, "Data Insertion Failed");
-                                }else {
-                                        repository.createStoreAccount(storeNameField.getText());
-                                        home.buildLogin();
-                                        frame.dispose();
-                                }
-                            }
-                        }
+                    // CHECK IF ALL FIELDS ARE FILLED
+                    if (checkEmpty()) {
+                        JOptionPane.showMessageDialog(frame, "Please Fill out all The Fields");
+                        return;
                     }
+                    // CHECK IF THE STORE NAME ALREADY EXISTS
+                    if (!repository.checkDuplicateStoreName(storeNameField.getText())) {
+                        JOptionPane.showMessageDialog(frame, "Store Name Already Exists");
+                        return;
+                    }
+                    // VALIDATE PHONE NUMBER
+                    if (phoneNumberField.getText().length() < 7 || phoneNumberField.getText().length() > 10) {
+                        JOptionPane.showMessageDialog(frame, "Invalid Phone Number");
+                        return;
+                    }
+                    // VALIDATE PASSWORD
+                    if (!passwordField.getText().equals(retypePasswordField.getText())) {
+                        JOptionPane.showMessageDialog(frame, "Passwords do not Match");
+                        return;
+                    }
+                    // CHECK DATABASE OUTPUT
+                    if (!(repository.addStoreData(new StoreModel(
+                            storeNameField.getText(),
+                            storeOwnerNameField.getText(),
+                            phoneNumberField.getText(),
+                            addressField.getText(),
+                            passwordField.getText())) > 0)) {
+                        JOptionPane.showMessageDialog(frame, "Data Insertion Failed");
+                        return;
+                    }
+                    // CREATE STORE ACCOUNT
+                    repository.createStoreAccount(storeNameField.getText());
+                    home.buildLogin();
+                    frame.dispose();
                 }
-
-            }
         );
 
+        // ADD WIDGETS TO PANEL
         panel.add(storeName);
         panel.add(storeNameField);
         panel.add(storeOwnerName);
@@ -76,20 +80,24 @@ class Register {
         panel.add(retypePasswordField);
         panel.add(confirmButton);
 
-        panel.setBounds(10,10,400,500);
-        panel.setLayout(new GridLayout(13,1,1,5));
+        // SETUP PANEL
+        panel.setBounds(10, 10, 400, 500);
+        panel.setLayout(new GridLayout(13, 1, 1, 5));
         panel.setVisible(true);
-        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(4,4,4,4,Color.BLACK),new EmptyBorder(10,10,10,10)));
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK), new EmptyBorder(10, 10, 10, 10)));
 
+        // SETUP FRAME
         frame.setLayout(null);
         frame.add(panel);
-        frame.setSize(450,580);
+        frame.setSize(450, 580);
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
     }
 
-    private boolean checkEmpty(){
-        return(storeNameField.getText().equals("") ||
+    // HELPER METHODS
+
+    private boolean checkEmpty() {
+        return (storeNameField.getText().equals("") ||
                 storeOwnerNameField.getText().equals("") ||
                 phoneNumberField.getText().equals("") ||
                 addressField.getText().equals("") ||

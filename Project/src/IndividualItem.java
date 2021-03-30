@@ -1,5 +1,3 @@
-import sun.rmi.runtime.Log;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -49,8 +47,7 @@ public class IndividualItem extends JPanel {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-//                flip();
-//                repaint();
+              // DON'T ALLOW USERS TO INTERACT WITHOUT LOGGING IN
               if(!Home.getLoggedInUser().equals("")) {
                   flip();
                   repaint();
@@ -59,14 +56,16 @@ public class IndividualItem extends JPanel {
               }
             }
         };
+        // SETUP SCREEN
         setPreferredSize(new Dimension(280, 270));
         setBackground(Color.white);
         setBorder(BorderFactory.createCompoundBorder(
                 new MatteBorder(4, 4, 4, 4, Color.BLACK),
                 new EmptyBorder(10, 10, 10, 10)));
-        addMouseListener(mouseAdapter);
-
         setLayout(null);
+
+        // ADD LISTENER
+        addMouseListener(mouseAdapter);
 
         itemLabel.setText(item);
         priceLabel.setText("Price: " + price);
@@ -75,6 +74,7 @@ public class IndividualItem extends JPanel {
         storeNameLabel.setText(storeName);
         wishlistLabel.setIcon(new ImageIcon(wishlistIcon.getImage().getScaledInstance(50, 80, Image.SCALE_DEFAULT)));
 
+        // MANAGE POSITIONS
         wishlistLabel.setBounds(10, 10, 50, 80);
 
         itemLabel.setBounds(0, 20, 280, 40);
@@ -87,6 +87,10 @@ public class IndividualItem extends JPanel {
         totalQtyLabel.setBounds(0, 140, 280, 40);
         storeNameLabel.setBounds(0, 160, 280, 40);
 
+        buyBtn.setBounds((getWidth() + 180) / 2, 150, 100, 40);
+        addToCartBtn.setBounds((getWidth() + 140) / 2, 200, 150, 40);
+
+        // CENTER TEXT
         itemLabel.setHorizontalAlignment(JLabel.CENTER);
         priceLabel.setHorizontalAlignment(JLabel.CENTER);
         qtyLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -94,9 +98,7 @@ public class IndividualItem extends JPanel {
         storeNameLabel.setHorizontalAlignment(JLabel.CENTER);
         wishlistLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        buyBtn.setBounds((getWidth() + 180) / 2, 150, 100, 40);
-        addToCartBtn.setBounds((getWidth() + 140) / 2, 200, 150, 40);
-
+        // ADD WIDGETS TO SCREEN
         add(wishlistLabel);
         add(itemLabel);
         add(priceLabel);
@@ -108,6 +110,88 @@ public class IndividualItem extends JPanel {
         add(storeNameLabel);
         add(addToCartBtn);
 
+        // ADD LISTENERS
+        addListeners(itemModel, cart);
+    }
+
+   // HELPER METHODS
+
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (state == STATE_UP) {
+            wishlistLabel.setVisible(false);
+            buyBtn.setVisible(false);
+            addToCartBtn.setVisible(false);
+            itemLabel.setVisible(false);
+            priceLabel.setVisible(false);
+            minusQtyField.setVisible(false);
+            qtyField.setVisible(false);
+            addQtyField.setVisible(false);
+            qtyLabel.setVisible(false);
+            totalQtyLabel.setVisible(false);
+            storeNameLabel.setVisible(false);
+            int y = getHeight();
+            try {
+                g.setFont(Font.createFont(
+                        Font.TRUETYPE_FONT,
+                        new FileInputStream(
+                                new File(path + "\\static\\Recursive-Black-CASL=0-CRSV=0.5-MONO=0-slnt=0.ttf")))
+                        .deriveFont(Font.PLAIN, 18)
+                );
+                BufferedImage img = imagePicker(item);
+                if (img == null) img = imagePicker("imagenotfound");
+                g.drawImage(img, (getWidth() - 150) / 2, (getHeight() - 220) / 2, 150, 150, null);
+                g.drawString("In Stock: " + quantity, (getWidth() - g.getFontMetrics().stringWidth("In Stock: " + quantity)) / 2, y - 30);
+                g.drawString(item, (getWidth() - g.getFontMetrics().stringWidth(item)) / 2, y - 70);
+                g.drawString("Rs " + price, (getWidth() - g.getFontMetrics().stringWidth("Rs " + price)) / 2, y - 50);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
+        } else {
+            wishlistLabel.setVisible(true);
+            buyBtn.setVisible(true);
+            addToCartBtn.setVisible(true);
+            itemLabel.setVisible(true);
+            priceLabel.setVisible(true);
+            minusQtyField.setVisible(true);
+            qtyField.setVisible(true);
+            addQtyField.setVisible(true);
+            qtyLabel.setVisible(true);
+            totalQtyLabel.setVisible(true);
+            storeNameLabel.setVisible(true);
+        }
+    }
+
+    private void flip() {
+        if (state == STATE_UP) {
+            state = STATE_DOWN;
+        } else {
+            state = STATE_UP;
+        }
+    }
+
+    private BufferedImage imagePicker(String item) {
+        String path = "D:\\Programming\\Java\\InventoryManagementSoftware\\Project\\images";
+        try {
+            File folder = new File(path);
+            File[] files = folder.listFiles();
+            String itemName = item.toLowerCase() + ".jpg";
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].getName().equals(itemName.replaceAll(" ", ""))) {
+                    return ImageIO.read(new File(path + "\\" + itemName.replaceAll(" ", "")));
+                }
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    // LISTENERS
+    private void addListeners(final ItemModel itemModel, Cart cart) {
         wishlistLabel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -213,79 +297,5 @@ public class IndividualItem extends JPanel {
                     }
                 }
         );
-    }
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        if (state == STATE_UP) {
-            wishlistLabel.setVisible(false);
-            buyBtn.setVisible(false);
-            addToCartBtn.setVisible(false);
-            itemLabel.setVisible(false);
-            priceLabel.setVisible(false);
-            minusQtyField.setVisible(false);
-            qtyField.setVisible(false);
-            addQtyField.setVisible(false);
-            qtyLabel.setVisible(false);
-            totalQtyLabel.setVisible(false);
-            storeNameLabel.setVisible(false);
-            int y = getHeight();
-            try {
-                g.setFont(Font.createFont(
-                        Font.TRUETYPE_FONT,
-                        new FileInputStream(
-                                new File(path + "\\static\\Recursive-Black-CASL=0-CRSV=0.5-MONO=0-slnt=0.ttf")))
-                        .deriveFont(Font.PLAIN, 18)
-                );
-                BufferedImage img = imagePicker(item);
-                if (img == null) img = imagePicker("imagenotfound");
-                g.drawImage(img, (getWidth() - 150) / 2, (getHeight() - 220) / 2, 150, 150, null);
-                g.drawString("In Stock: " + quantity, (getWidth() - g.getFontMetrics().stringWidth("In Stock: " + quantity)) / 2, y - 30);
-                g.drawString(item, (getWidth() - g.getFontMetrics().stringWidth(item)) / 2, y - 70);
-                g.drawString("Rs " + price, (getWidth() - g.getFontMetrics().stringWidth("Rs " + price)) / 2, y - 50);
-            } catch (Exception exception) {
-                exception.printStackTrace();
-            }
-
-        } else {
-            wishlistLabel.setVisible(true);
-            buyBtn.setVisible(true);
-            addToCartBtn.setVisible(true);
-            itemLabel.setVisible(true);
-            priceLabel.setVisible(true);
-            minusQtyField.setVisible(true);
-            qtyField.setVisible(true);
-            addQtyField.setVisible(true);
-            qtyLabel.setVisible(true);
-            totalQtyLabel.setVisible(true);
-            storeNameLabel.setVisible(true);
-        }
-    }
-
-    private void flip() {
-        if (state == STATE_UP) {
-            state = STATE_DOWN;
-        } else {
-            state = STATE_UP;
-        }
-    }
-
-    private BufferedImage imagePicker(String item) {
-        String path = "D:\\Programming\\Java\\InventoryManagementSoftware\\Project\\images";
-        try {
-            File folder = new File(path);
-            File[] files = folder.listFiles();
-            String itemName = item.toLowerCase() + ".jpg";
-            for (int i = 0; i < files.length; i++) {
-                if (files[i].getName().equals(itemName.replaceAll(" ", ""))) {
-                    return ImageIO.read(new File(path + "\\" + itemName.replaceAll(" ", "")));
-                }
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-        return null;
     }
 }

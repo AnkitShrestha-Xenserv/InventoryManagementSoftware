@@ -5,18 +5,19 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ankit on 7/24/2020.
- */
+// Created on: 7/24/2020.
+
 class AddStock extends JPanel {
     private static int SUCCESS = 1;
     private static int FLAG = 0;
     private final String storeName;
     private JTable stockAddingTable = new JTable();
     private JTable stockTable = new JTable();
-    private Object []row2 = new Object[5];
-    private DefaultTableModel model2 = new DefaultTableModel(){
-        public boolean isCellEditable(int row, int column){return false;}
+    private Object[] row2 = new Object[5];
+    private DefaultTableModel model2 = new DefaultTableModel() {
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
     };
     private JPanel panel1 = new JPanel();
     private JPanel panel2 = new JPanel();
@@ -24,7 +25,7 @@ class AddStock extends JPanel {
     private JPanel mainPanel = new JPanel();
     private Home home;
 
-    AddStock(String storeName, Home home){
+    AddStock(String storeName, Home home) {
         this.storeName = storeName;
         this.home = home;
 
@@ -37,8 +38,8 @@ class AddStock extends JPanel {
         mainPanel.add(panel2);
 
         // SETUP MAIN PANEL
-        mainPanel.setBorder(BorderFactory.createMatteBorder(4,4,4,4, Color.BLACK));
-        mainPanel.setBounds(10,10,1440,810);
+        mainPanel.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
+        mainPanel.setBounds(10, 10, 1440, 810);
         mainPanel.setLayout(null);
         mainPanel.setVisible(true);
 
@@ -47,10 +48,10 @@ class AddStock extends JPanel {
 
         // SETUP CLASS PANEL
         setLayout(null);
-        setPreferredSize(new Dimension(1460,800));
+        setPreferredSize(new Dimension(1460, 800));
     }
 
-    private void buildFirstPanel(){
+    private void buildFirstPanel() {
         JLabel addStockLabel = new JLabel("Add Stock");
 
         JLabel itemLabel = new JLabel("Item");
@@ -72,7 +73,7 @@ class AddStock extends JPanel {
         types.add("");
         List<ItemModel> list = repository.getAllStoreData();
         // GET A LIST OF ALL THE TYPES OF ITEMS SOLD BY ALL STORES
-        for(ItemModel model : list){
+        for (ItemModel model : list) {
             types.add(model.getType());
         }
         // SETUP FOR TYPE FIELD SUGGESTIONS
@@ -100,10 +101,12 @@ class AddStock extends JPanel {
 
         pane.getViewport().add(stockAddingTable);
 
-        DefaultTableModel model = new DefaultTableModel(){
-            public boolean isCellEditable(int row, int column){return false;}
+        DefaultTableModel model = new DefaultTableModel() {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
-        Object columns[] ={"No.", "Items", "Quantity", "Price", "Type"};
+        Object columns[] = {"No.", "Items", "Quantity", "Price", "Type"};
         model.setColumnIdentifiers(columns);
         stockAddingTable.setModel(model);
         Object row[] = new Object[5];
@@ -115,22 +118,22 @@ class AddStock extends JPanel {
         addListeners(addButton, deleteButton, resetButton, confirmButton, itemField, quantityField, priceField, typeField, model, row);
 
         // MANAGE POSITIONS
-        addStockLabel.setBounds(260,20,200,50);
-        itemLabel.setBounds(40,80,200,40);
-        itemField.setBounds(220,80,200,40);
-        quantityLabel.setBounds(40,130,200,40);
-        quantityField.setBounds(220,130,200,40);
-        priceLabel.setBounds(40,180,200,40);
-        priceField.setBounds(220,180,200,40);
-        typeLabel.setBounds(40,230,200,40);
-        typeField.setBounds(220,230,200,40);
+        addStockLabel.setBounds(260, 20, 200, 50);
+        itemLabel.setBounds(40, 80, 200, 40);
+        itemField.setBounds(220, 80, 200, 40);
+        quantityLabel.setBounds(40, 130, 200, 40);
+        quantityField.setBounds(220, 130, 200, 40);
+        priceLabel.setBounds(40, 180, 200, 40);
+        priceField.setBounds(220, 180, 200, 40);
+        typeLabel.setBounds(40, 230, 200, 40);
+        typeField.setBounds(220, 230, 200, 40);
 
-        addButton.setBounds(500,230,150,50);
+        addButton.setBounds(500, 230, 150, 50);
 
-        pane.setBounds(40,300,660,200);
+        pane.setBounds(40, 300, 660, 200);
         deleteButton.setBounds(300, 520, 150, 50);
-        resetButton.setBounds(50,520,150,50);
-        confirmButton.setBounds(550,520,150,50);
+        resetButton.setBounds(50, 520, 150, 50);
+        confirmButton.setBounds(550, 520, 150, 50);
 
 
         // ADD WIDGETS TO SCREEN
@@ -152,14 +155,14 @@ class AddStock extends JPanel {
 
         // SETUP THE PANEL
         panel1.setVisible(true);
-        panel1.setBounds(10,0,720,810);
+        panel1.setBounds(10, 0, 720, 810);
         panel1.setLayout(null);
-        panel1.setBorder(BorderFactory.createMatteBorder(4,4,4,4, Color.BLACK));
+        panel1.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
 
     }
 
 
-    private void buildSecondPanel(){
+    private void buildSecondPanel() {
         Repository repository = new Repository();
 
         List<ItemModel> list = repository.getParticularStoreData(storeName);
@@ -172,7 +175,7 @@ class AddStock extends JPanel {
         // SETUP SCROLL PANE AND TABLE
         JScrollPane pane = new JScrollPane();
 
-        Object []columns = {"No.", "Item", "Quantity", "Price", "Type"};
+        Object[] columns = {"No.", "Item", "Quantity", "Price", "Type"};
         model2.setColumnIdentifiers(columns);
 
         stockTable.setModel(model2);
@@ -194,11 +197,11 @@ class AddStock extends JPanel {
 
         // MANAGE POSITIONS
         pane.setBounds(30, 90, 650, 500);
-        availableStockLabel.setBounds(260,20,200,50);
-        salesReportButton.setBounds(300,650,200,50);
+        availableStockLabel.setBounds(260, 20, 200, 50);
+        salesReportButton.setBounds(300, 650, 200, 50);
 
         // ADD LISTENER
-        salesReportButton.addActionListener((ActionListener)->{
+        salesReportButton.addActionListener((ActionListener) -> {
             new StoreSalesReport(storeName);
         });
 
@@ -208,9 +211,9 @@ class AddStock extends JPanel {
         panel2.add(pane);
 
         // SETUP PANEL
-        panel2.setBounds(720,0,710,810);
+        panel2.setBounds(720, 0, 710, 810);
         panel2.setLayout(null);
-        panel2.setBorder(BorderFactory.createMatteBorder(4,4,4,4, Color.BLACK));
+        panel2.setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLACK));
         panel2.setVisible(true);
     }
 
@@ -218,9 +221,9 @@ class AddStock extends JPanel {
 
     // CHECK IF DUPLICATE ITEM EXISTS IN STOCK ADDING TABLE AND
     // CHECK IF THEIR TYPES ARE DIFFERENT
-    private boolean checkDuplicateTypeInTable(String item, String type){
-        for(int i = 0; i< stockAddingTable.getModel().getRowCount(); i++){
-            if(stockAddingTable.getModel().getValueAt(i,1).toString().toLowerCase().equals(item.toLowerCase()) && !stockAddingTable.getModel().getValueAt(i,4).toString().toLowerCase().equals(type.toLowerCase())){
+    private boolean checkDuplicateTypeInTable(String item, String type) {
+        for (int i = 0; i < stockAddingTable.getModel().getRowCount(); i++) {
+            if (stockAddingTable.getModel().getValueAt(i, 1).toString().toLowerCase().equals(item.toLowerCase()) && !stockAddingTable.getModel().getValueAt(i, 4).toString().toLowerCase().equals(type.toLowerCase())) {
                 return true;
             }
         }
@@ -229,10 +232,10 @@ class AddStock extends JPanel {
 
     // CHECK IF DUPLICATE ITEM EXISTS IN STOCK ADDING TABLE AND
     // CHECK IF THEIR PRICES ARE DIFFERENT
-    private boolean checkDuplicatePriceInTable(String item, String price){
-        for(int i = 0; i< stockAddingTable.getModel().getRowCount(); i++){
-            if(stockAddingTable.getModel().getValueAt(i,1).toString().toLowerCase().equals(item.toLowerCase()) &&
-                    !(stockAddingTable.getModel().getValueAt(i,3).equals(price))){
+    private boolean checkDuplicatePriceInTable(String item, String price) {
+        for (int i = 0; i < stockAddingTable.getModel().getRowCount(); i++) {
+            if (stockAddingTable.getModel().getValueAt(i, 1).toString().toLowerCase().equals(item.toLowerCase()) &&
+                    !(stockAddingTable.getModel().getValueAt(i, 3).equals(price))) {
                 return true;
             }
         }
@@ -241,9 +244,9 @@ class AddStock extends JPanel {
 
     // CHECK IF DUPLICATE ITEM EXISTS IN STOCK ADDING TABLE AND
     // ADD QUANTITY OF SAME ITEMS
-    private int checkDuplicateItemInTableAndAdd(String item){
-        for(int i = 0; i< stockAddingTable.getModel().getRowCount(); i++){
-            if(stockAddingTable.getModel().getValueAt(i,1).toString().toLowerCase().equals(item.toLowerCase())){
+    private int checkDuplicateItemInTableAndAdd(String item) {
+        for (int i = 0; i < stockAddingTable.getModel().getRowCount(); i++) {
+            if (stockAddingTable.getModel().getValueAt(i, 1).toString().toLowerCase().equals(item.toLowerCase())) {
                 return i;
             }
         }
@@ -255,97 +258,104 @@ class AddStock extends JPanel {
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 20));
         table.getTableHeader().setOpaque(true);
         table.getTableHeader().setBackground(new Color(32, 136, 203));
-        table.getTableHeader().setForeground(new Color(255,255,255));
+        table.getTableHeader().setForeground(new Color(255, 255, 255));
         table.setRowHeight(25);
         table.setFocusable(false);
-        table.setIntercellSpacing(new Dimension(0,0));
-        table.setSelectionBackground(new Color(232,57,95));
+        table.setIntercellSpacing(new Dimension(0, 0));
+        table.setSelectionBackground(new Color(232, 57, 95));
         table.setShowVerticalLines(false);
     }
 
     // ADD BUTTON LISTENERS
     private void addListeners(JButton addButton, JButton deleteButton, JButton resetButton, JButton confirmButton, JTextField itemField, JTextField quantityField, JTextField priceField, AutoCompleteComboBox typeField, DefaultTableModel model, Object[] row) {
         addButton.addActionListener((ActionEvent e) -> {
-                    if(!(itemField.getText().equals("") ||
+                    // CHECK IF ANY FIELDS ARE EMPTY
+                    if ((itemField.getText().equals("") ||
                             quantityField.getText().equals("") ||
                             priceField.getText().equals("") ||
-                            typeField.getSelectedItem().equals(""))){
-                        if(repository.checkDuplicateItemWithDifferentPrice(
-                                storeName,
-                                itemField.getText(),
-                                priceField.getText()) ||
-                                checkDuplicatePriceInTable(
-                                        itemField.getText(),
-                                        priceField.getText())
-                                ) {
-                            JOptionPane.showMessageDialog(AddStock.super.getComponent(0), "Same Items cannot have Different Prices");
-                        }else if(repository.checkDuplicateItemWithDifferentType(
-                                storeName,
-                                itemField.getText(),
-                                typeField.getSelectedItem().toString()) ||
-                                checkDuplicateTypeInTable(itemField.getText(),
-                                        typeField.getSelectedItem().toString())){
-                            JOptionPane.showMessageDialog(AddStock.super.getComponent(0), "Same Items cannot have Different Types");
-
-                        }else if(checkDuplicateItemInTableAndAdd(itemField.getText()) > -1){
-                            int dup = checkDuplicateItemInTableAndAdd(itemField.getText());
-                            model.setValueAt(Double.parseDouble(model.getValueAt(dup,2).toString()) + Double.parseDouble(quantityField.getText()),dup,2);
-                        }else{
-                            row[0] = stockAddingTable.getRowCount() + 1;
-                            row[1] = itemField.getText();
-                            row[2] = quantityField.getText();
-                            row[3] = priceField.getText();
-                            row[4] = typeField.getSelectedItem();
-                            model.addRow(row);
-                            itemField.setText("");
-                            quantityField.setText("");
-                            priceField.setText("");
-                            itemField.grabFocus();
-                        }
-                    }else{
+                            typeField.getSelectedItem().equals(""))) {
                         JOptionPane.showMessageDialog(AddStock.super.getComponent(0), "Please Complete the Form");
+                        return;
+                    }
+                    // CHECK IF THERE ARE DUPLICATE ITEMS WITH SAME PRICES OR TYPES
+                    // IF NOT, CHECK IF THE ITEM ALREADY EXISTS IN THE STORE STOCK
+                    // IF YES, JUST ADD THE QUANTITY
+                    // OTHERWISE JUST ADD THE ITEM
+                    if (repository.checkDuplicateItemWithDifferentPrice(
+                            storeName,
+                            itemField.getText(),
+                            priceField.getText()) ||
+                            checkDuplicatePriceInTable(
+                                    itemField.getText(),
+                                    priceField.getText())
+                            ) {
+                        JOptionPane.showMessageDialog(AddStock.super.getComponent(0), "Same Items cannot have Different Prices");
+                    } else if (repository.checkDuplicateItemWithDifferentType(
+                            storeName,
+                            itemField.getText(),
+                            typeField.getSelectedItem().toString()) ||
+                            checkDuplicateTypeInTable(itemField.getText(),
+                                    typeField.getSelectedItem().toString())) {
+                        JOptionPane.showMessageDialog(AddStock.super.getComponent(0), "Same Items cannot have Different Types");
+                    } else if (checkDuplicateItemInTableAndAdd(itemField.getText()) > -1) {
+                        int dup = checkDuplicateItemInTableAndAdd(itemField.getText());
+                        model.setValueAt(Double.parseDouble(model.getValueAt(dup, 2).toString()) + Double.parseDouble(quantityField.getText()), dup, 2);
+                    } else {
+                        row[0] = stockAddingTable.getRowCount() + 1;
+                        row[1] = itemField.getText();
+                        row[2] = quantityField.getText();
+                        row[3] = priceField.getText();
+                        row[4] = typeField.getSelectedItem();
+                        model.addRow(row);
+                        itemField.setText("");
+                        quantityField.setText("");
+                        priceField.setText("");
+                        itemField.grabFocus();
                     }
                 }
         );
 
+        // DELETE THE SELECTED ROW
         deleteButton.addActionListener((ActionEvent e) -> {
                     int i = stockAddingTable.getSelectedRow();
-                    if(i >= 0){
+                    if (i >= 0) {
                         model.removeRow(i);
                     }
                 }
         );
 
+        // CLEAR THE TABLE
         resetButton.addActionListener((ActionEvent e) -> model.setRowCount(0));
 
+        // CONFIRM TRANSACTION
         confirmButton.addActionListener((ActionEvent e) -> {
 
-                    for(int i = 0; i< stockAddingTable.getModel().getRowCount(); i++){
+                    for (int i = 0; i < stockAddingTable.getModel().getRowCount(); i++) {
                         ItemModel itemModel = new ItemModel(
                                 storeName,
-                                stockAddingTable.getModel().getValueAt(i,1).toString(),
-                                Double.parseDouble(stockAddingTable.getModel().getValueAt(i,2).toString()),
-                                Double.parseDouble(stockAddingTable.getModel().getValueAt(i,3).toString()),
-                                String.valueOf(stockAddingTable.getModel().getValueAt(i,4)));
-                        if(repository.addStoreItems(itemModel)==0){
+                                stockAddingTable.getModel().getValueAt(i, 1).toString(),
+                                Double.parseDouble(stockAddingTable.getModel().getValueAt(i, 2).toString()),
+                                Double.parseDouble(stockAddingTable.getModel().getValueAt(i, 3).toString()),
+                                String.valueOf(stockAddingTable.getModel().getValueAt(i, 4)));
+                        if (repository.addStoreItems(itemModel) == 0) {
                             SUCCESS = 0;
                         }
                     }
 
-                    if(SUCCESS ==0){
+                    if (SUCCESS == 0) {
                         JOptionPane.showMessageDialog(AddStock.super.getComponent(1), "Data Insertion Failed");
                         SUCCESS = 1;
-                    }else {
+                    } else {
                         JOptionPane.showMessageDialog(AddStock.super.getComponent(0), "Data Insertion Complete");
-                        for(int i= 0 ; i<model.getRowCount(); i++){
-                            for(int j = 0; j < model2.getRowCount(); j++){
-                                if(model.getValueAt(i,1).toString().toLowerCase().equals(model2.getValueAt(j,1).toString().toLowerCase())){
-                                    model2.setValueAt(Double.parseDouble(model.getValueAt(i,2).toString()) + Double.parseDouble(model2.getValueAt(j,2).toString()),j,2);
+                        for (int i = 0; i < model.getRowCount(); i++) {
+                            for (int j = 0; j < model2.getRowCount(); j++) {
+                                if (model.getValueAt(i, 1).toString().toLowerCase().equals(model2.getValueAt(j, 1).toString().toLowerCase())) {
+                                    model2.setValueAt(Double.parseDouble(model.getValueAt(i, 2).toString()) + Double.parseDouble(model2.getValueAt(j, 2).toString()), j, 2);
                                     FLAG = 1;
                                     break;
                                 }
                             }
-                            if(FLAG == 0) {
+                            if (FLAG == 0) {
                                 row2[0] = model2.getRowCount() + 1;
                                 row2[1] = model.getValueAt(i, 1);
                                 row2[2] = model.getValueAt(i, 2);
@@ -355,7 +365,9 @@ class AddStock extends JPanel {
                             }
                             FLAG = 0;
                         }
+                        // CLEAR THE STOCK ADDING TABLE
                         model.setRowCount(0);
+                        // RECREATE THE LEFT PANEL
                         home.reCreateLeftPanel();
                     }
                 }
