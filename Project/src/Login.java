@@ -5,10 +5,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-/**
- * Created by Ankit on 7/24/2020.
- */
+// Created On: 7/24/2020.
+
 public class Login extends JPanel{
+
+    // CREATE ONE AND ONLY OBJECT OF HOME CLASS
     private static Home home = new Home();
 
     public static void main(String[] args) {
@@ -16,20 +17,27 @@ public class Login extends JPanel{
     }
 
     private Repository repository;
-    private ArrayList<String> stores;
     JComboBox nameField;
 
-    private JLabel nameLabel = new JLabel("Store Name");
-    private JLabel passLabel = new JLabel("Password");
     JPasswordField passField = new JPasswordField();
-    private JButton loginButton =new JButton("Login");
-    private JButton registerButton = new JButton("Register");
+
     Login(){
+        ArrayList<String> stores;
+
+        JLabel nameLabel = new JLabel("Store Name");
+        JLabel passLabel = new JLabel("Password");
+
+        JButton loginButton =new JButton("Login");
+        JButton registerButton = new JButton("Register");
+
         repository = fetchRepo();
 
         stores = repository.getStoreNames();
+        // ADD BLANK STRING SO THAT INITIAL SELECTION IS EMPTY
+        stores.add(0,"");
         nameField = new AutoCompleteComboBox(stores.toArray());
 
+        // ADD LISTENERS
         loginButton.addActionListener((ActionEvent e) -> {
                 if(repository.checkStoreValidity(nameField.getSelectedItem().toString(), String.valueOf(passField.getPassword()))) {
                     home.logInStoreUser(nameField.getSelectedItem().toString());
@@ -44,6 +52,7 @@ public class Login extends JPanel{
             }
         );
 
+        // MANAGE POSITIONS
         nameLabel.setBounds((getWidth()+200)/2,110,200,30);
         nameField.setBounds((getWidth()+200)/2,140,200,30);
         passLabel.setBounds((getWidth()+200)/2,180,200,30);
@@ -51,8 +60,8 @@ public class Login extends JPanel{
         loginButton.setBounds((getWidth()+200)/2,250,150,40);
         registerButton.setBounds((getWidth()+200)/2,300,150,40);
 
-        setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4,4,4,4,Color.BLACK), new EmptyBorder(5,5,5,5)));
 
+        // ADD WIDGETS TO SCREEN
         add(nameLabel);
         add(nameField);
         add(passLabel);
@@ -60,6 +69,8 @@ public class Login extends JPanel{
         add(loginButton);
         add(registerButton);
 
+        // SETUP THE PANEL
+        setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4,4,4,4,Color.BLACK), new EmptyBorder(5,5,5,5)));
         setLayout(null);
         setPreferredSize(new Dimension(800,270));
         setVisible(true);

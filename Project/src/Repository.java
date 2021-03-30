@@ -136,7 +136,6 @@ class Repository {
     // GET NAMES OF ALL EXISTING STORES
     ArrayList<String> getStoreNames(){
         ArrayList<String> stores = new ArrayList<>();
-        stores.add("");
         try{
             Connection con = DriverManager.getConnection(Db_url, "root", "");
             String sql = "SELECT StoreName FROM stores_info";
@@ -180,7 +179,6 @@ class Repository {
     // GET ALL THE INFORMATION OF ALL EXISTING STORES
     List<ItemModel> getAllStoreData(){
         ArrayList<String> stores = getStoreNames();
-        stores.remove(0);
 
         List<ItemModel> items = new ArrayList<>();
         ItemModel item;
@@ -650,7 +648,8 @@ class Repository {
 
     // REFORM ITEM NAME TO DISPLAY FORMAT (FIRST LETTER OF EACH WORD CAPITAL)
     private String reformItemName(String item) {
-        item = item.substring(0,1).toUpperCase() + item.substring(1);
+        if(item.equals("")) return item;
+        item = (item.substring(0,1).toUpperCase() + item.substring(1)).trim();
         for(int i=0;i<item.length();i++){
             if(item.substring(i,i+1).equals(" ")){
                 item = item.substring(0,i+1) + item.substring(i+1,i+2).toUpperCase() + item.substring(i+2);

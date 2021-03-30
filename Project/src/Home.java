@@ -33,7 +33,8 @@ class Home {
     private final String path = "D:\\Programming\\Java\\InventoryManagementSoftware\\Project\\images\\";
     private static String loggedInUser = "";
 
-    private JList<String> jList = new JList<>(getAllTypes(list));
+    private DefaultListModel listModel = new DefaultListModel();
+    private JList<String> jList;
 
     private JScrollPane pane = new JScrollPane();
     private ImageIcon homeIcon = new ImageIcon(path + "home.png");
@@ -165,7 +166,15 @@ class Home {
         userHomePage.setVisible(false);
     }
 
-    void reFetchData(){
+    void reCreateLeftPanel(){
+        // RECREATE LEFT PANEL
+        listModel = getAllTypes(repository.getAllStoreData());
+        jList.setModel(listModel);
+    }
+
+    void reCreateMiddlePanel(){
+
+        //RECREATE MIDDLE PANEL
         middlePanel.remove(pane);
         repository = new Repository();
         list = repository.getAllStoreData();
@@ -216,6 +225,8 @@ class Home {
     }
 
     private void buildLeftPanel(){
+        listModel  = getAllTypes(repository.getAllStoreData());
+        jList = new JList<>(listModel);
         jList.setCellRenderer(new ListRenderer());
         jList.setBounds(20,20,350,810);
         jList.setBackground(Color.orange);
@@ -290,7 +301,7 @@ class Home {
 
      void logInStoreUser(String name){
         ownerLogin.setVisible(false);
-        stock = new AddStock(name);
+        stock = new AddStock(name, this);
         stock.setVisible(true);
         stock.setBounds(10,10,1460,830);
         middlePanel.add(stock);
@@ -355,7 +366,7 @@ class Home {
         homeIconLabel.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                reFetchData();
+                reCreateMiddlePanel();
                 cart.setVisible(false);
                 userLogin.setVisible(false);
                 if(userHomePage != null) {
