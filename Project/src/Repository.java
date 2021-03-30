@@ -6,6 +6,11 @@ import java.util.Date;
 class Repository {
     private final String Db_url = "jdbc:mysql://localhost/inventory_management?useLegacyDatetimeCode=false&serverTimezone=Asia/Kathmandu";
 
+    // GET DATA FROM THE DATABASE
+
+    //GET ITEM DATA FROM DATABASE
+
+    // GET ALL THE INFORMATION OF A PARTICULAR ITEM FROM A PARTICULAR STORE
     ItemModel getParticularItemData(String storeName, String itemName){
         try{
             String sql = "SELECT * FROM " + changeNameToDBFormat(storeName);
@@ -36,6 +41,26 @@ class Repository {
         );
     }
 
+    // GET USER DATA FROM DATABASE
+
+    // GET NAMES OF ALL EXISTING USERS
+    ArrayList<String> getUserNames(){
+        ArrayList<String> users = new ArrayList<>();
+        try{
+            Connection con = DriverManager.getConnection(Db_url, "root", "");
+            String sql = "SELECT Username FROM user_info";
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while(rs.next()){
+                users.add(rs.getString("Username"));
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+        return users;
+    }
+
+    // GET ALL THE INFORMATION OF A PARTICULAR USER
     UserModel getParticularUserData(String userName) {
         try {
             String sql = "SELECT * from  user_info";
@@ -53,57 +78,7 @@ class Repository {
         return null;
     }
 
-    ArrayList<StoreReportModel> getStoreReportData(String storeName){
-        try{
-            ArrayList<StoreReportModel> list = new ArrayList<>();
-            Connection con = DriverManager.getConnection(Db_url,"root", "");
-            String sql = "SELECT * from " + getStoreReportListName(storeName);
-            PreparedStatement st = con.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while(rs.next()){
-                list.add(new StoreReportModel(
-                        reformItemName(rs.getString("Item")),
-                        rs.getDouble("Quantity"),
-                        rs.getDouble("Price"),
-                        rs.getString("Type"),
-                        rs.getTimestamp("SalesDate"),
-                        rs.getString("BuyerName"),
-                        rs.getString("BuyerAddress"),
-                        rs.getString("BuyerPhoneNumber"))
-                );
-            }
-            return list;
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
-        return null;
-    }
-
-    List<ItemModel> getParticularStoreData(String storeName){
-        try{
-            List<ItemModel> list = new ArrayList<>();
-            String sql = "SELECT * from " + changeNameToDBFormat(storeName);
-            Connection con = DriverManager.getConnection(Db_url, "root", "");
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            ItemModel item;
-            while(rs.next()){
-                item = new ItemModel(
-                        storeName,
-                        reformItemName(rs.getString("Item")),
-                        rs.getDouble("Quantity"),
-                        rs.getDouble("Price"),
-                        reformItemName(rs.getString("Type"))
-                );
-                list.add(item);
-            }
-            return list;
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
-        return null;
-    }
-
+    // GET LIST OF ALL WISH LIST ITEMS OF USER
     ArrayList<ItemModel> getUserWishListData(String userName){
         try{
             ArrayList<ItemModel> list = new ArrayList<>();
@@ -129,23 +104,9 @@ class Repository {
         return null;
     }
 
-    ArrayList<String> getUserNames(){
-        ArrayList<String> users = new ArrayList<>();
-        try{
-            Connection con = DriverManager.getConnection(Db_url, "root", "");
-            String sql = "SELECT Username FROM user_info";
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while(rs.next()){
-                users.add(rs.getString("Username"));
-            }
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
-        return users;
-    }
-
-    // Pass getUserBuyListName() and getUserDeliveredListName() to get all data
+    // GET ALL THE DATA OF USER TRANSACTIONS
+    // PASS getUserBuyListName() METHOD FOR NOT DELIVERED ITEMS LIST
+    // PASS getUserDeliveredListName() DELIVERED ITEMS LIST
     ArrayList<UserReportModel> getUserBuyListData(String userName){
         try{
             ArrayList<UserReportModel> list = new ArrayList<>();
@@ -170,7 +131,9 @@ class Repository {
         return null;
     }
 
-    //NEW
+    // GET STORE DATA FROM DATABASE
+
+    // GET NAMES OF ALL EXISTING STORES
     ArrayList<String> getStoreNames(){
         ArrayList<String> stores = new ArrayList<>();
         stores.add("");
@@ -188,6 +151,33 @@ class Repository {
         return stores;
     }
 
+    // GET ALL THE INFORMATION OF A PARTICULAR STORE
+    List<ItemModel> getParticularStoreData(String storeName){
+        try{
+            List<ItemModel> list = new ArrayList<>();
+            String sql = "SELECT * from " + changeNameToDBFormat(storeName);
+            Connection con = DriverManager.getConnection(Db_url, "root", "");
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            ItemModel item;
+            while(rs.next()){
+                item = new ItemModel(
+                        storeName,
+                        reformItemName(rs.getString("Item")),
+                        rs.getDouble("Quantity"),
+                        rs.getDouble("Price"),
+                        reformItemName(rs.getString("Type"))
+                );
+                list.add(item);
+            }
+            return list;
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    // GET ALL THE INFORMATION OF ALL EXISTING STORES
     List<ItemModel> getAllStoreData(){
         ArrayList<String> stores = getStoreNames();
         stores.remove(0);
@@ -217,6 +207,154 @@ class Repository {
         return items;
     }
 
+    // GET SALES REPORT LIST OF A PARTICULAR STORE
+    ArrayList<StoreReportModel> getStoreReportData(String storeName){
+        try{
+            ArrayList<StoreReportModel> list = new ArrayList<>();
+            Connection con = DriverManager.getConnection(Db_url,"root", "");
+            String sql = "SELECT * from " + getStoreReportListName(storeName);
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while(rs.next()){
+                list.add(new StoreReportModel(
+                        reformItemName(rs.getString("Item")),
+                        rs.getDouble("Quantity"),
+                        rs.getDouble("Price"),
+                        rs.getString("Type"),
+                        rs.getTimestamp("SalesDate"),
+                        rs.getString("BuyerName"),
+                        rs.getString("BuyerAddress"),
+                        rs.getString("BuyerPhoneNumber"))
+                );
+            }
+            return list;
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    // ADD DATA TO THE DATABASE
+
+    // ADD DATA TO USER DATABASE
+
+    // ADD INFORMATION OF NEW USER
+    int addUserData(UserModel model){
+        try{
+            Connection con = DriverManager.getConnection(Db_url, "root", "");
+            String sql = "INSERT into user_info (UserName, PhoneNumber, Address, Password)" + "VALUES(?,?,?,?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1,model.getUserName());
+            stmt.setString(2,model.getPhoneNumber());
+            stmt.setString(3,model.getAddress());
+            stmt.setString(4,model.getPassword());
+            return stmt.executeUpdate();
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return 0;
+        }
+    }
+
+    // ADD ITEM TO USER WISH LIST
+    int addItemToWishList(ItemModel itemModel,String userName){
+        try{
+            Connection con = DriverManager.getConnection(Db_url, "root", "");
+            String sql = "INSERT into " + getWishListName(userName) + " (Item,StoreName)" + " VALUES(?,?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1,itemModel.getItem().toLowerCase());
+            stmt.setString(2,itemModel.getStoreName());
+            return stmt.executeUpdate();
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+        return 0;
+    }
+
+    private final int DELIVERY_TIME = 10; // Delivery Time in Minutes
+    // TO CHANGE DELIVERY TIME, CHANGE THE {DELIVERY_TIME} CONSTANT ABOVE
+    // CHECK WHETHER THE ITEMS HAVE BEEN DELIVERED TO THE USER
+    // AND CALL METHODS TO UPDATE THE TABLES RESPECTIVELY
+    void deliverItemsToUser(String userName){
+        try{
+            Connection con = DriverManager.getConnection(Db_url,"root","");
+            String sql = "SELECT * from " + getUserBuyListName(userName);
+            PreparedStatement st = con.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while(rs.next()){
+                if((DateStuff.getIntegerTime(rs.getTimestamp("BuyDate").toString()) + DELIVERY_TIME) <
+                        DateStuff.getIntegerTime((new Timestamp((new Date()).getTime())).toString().substring(0,19))){
+                    addBoughtItemToUserDeliveredList(rs,userName,con);
+                    removeBoughtItemFromUserBuyList(rs.getInt("Id"),userName,con);
+                }
+            }
+        }catch(Exception exception){
+            exception.printStackTrace();
+        }
+    }
+
+    // ADD ITEM TO userBuyList WHEN USER BUYS ITEMS
+    void addBoughtItemToUserBuyList(double quantity,ItemModel itemModel, UserModel userModel){
+        try{
+            Connection con = DriverManager.getConnection(Db_url,"root","");
+            String sql = "INSERT into " + getUserBuyListName(userModel.getUserName()) +
+                    " (Item, Quantity, Price, `Type`, StoreName, BuyDate)" +
+                    "VALUES(?,?,?,?,?,?)";
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1,itemModel.getItem());
+            st.setDouble(2,quantity);
+            st.setDouble(3,itemModel.getPrice());
+            st.setString(4,itemModel.getType());
+            st.setString(5,itemModel.getStoreName());
+            st.setObject(6,new Timestamp((new Date()).getTime()));
+            st.execute();
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+    }
+
+    // ADD ITEM TO THE USER DELIVERED LIST FROM userBuyList AFTER DELIVERY TIME HAS PASSED
+    void addBoughtItemToUserDeliveredList(ResultSet rs, String userName,Connection con){
+        try{
+            String sql = "INSERT into " + getUserDeliveredListName(userName) +
+                    " (Item, Quantity, Price, `Type`, StoreName, BuyDate)" +
+                    "VALUES(?,?,?,?,?,?)";
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1,rs.getString("Item"));
+            st.setDouble(2,rs.getDouble("Quantity"));
+            st.setDouble(3,rs.getDouble("Price"));
+            st.setString(4,rs.getString("Type"));
+            st.setString(5,rs.getString("StoreName"));
+            st.setObject(6,rs.getTimestamp("BuyDate"));
+            st.execute();
+        }catch (Exception exception){
+            exception.printStackTrace();
+        }
+    }
+
+
+
+    // ADD DATA TO STORE DATABASE
+
+    // ADD INFORMATION OF NEW STORE
+    int addStoreData(StoreModel model){
+        try {
+            Connection con = DriverManager.getConnection(Db_url, "root", "");
+            String sql = "INSERT into stores_info (StoreName, StoreOwnerName, PhoneNumber, Address, Password)" +
+                    "VALUES(?,?,?,?,?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1,model.storeName);
+            stmt.setString(2,model.storeOwnerName);
+            stmt.setString(3,model.phoneNumber);
+            stmt.setString(4,model.address);
+            stmt.setString(5,model.password);
+            return stmt.executeUpdate();
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return 0;
+        }
+    }
+
+    // ADD NEW STOCK ITEMS TO STORE DATABASE
     int addStoreItems(ItemModel model){
         try{
             String sqlExtract = "SELECT * FROM " + changeNameToDBFormat(model.getStoreName());
@@ -251,47 +389,7 @@ class Repository {
       return 0;
     }
 
-
-
-
-
-    int addUserData(UserModel model){
-        try{
-            Connection con = DriverManager.getConnection(Db_url, "root", "");
-            String sql = "INSERT into user_info (UserName, PhoneNumber, Address, Password)" + "VALUES(?,?,?,?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1,model.getUserName());
-            stmt.setString(2,model.getPhoneNumber());
-            stmt.setString(3,model.getAddress());
-            stmt.setString(4,model.getPassword());
-            return stmt.executeUpdate();
-        }catch(Exception exception){
-            exception.printStackTrace();
-            return 0;
-        }
-    }
-
-    int addStoreData(StoreModel model){
-        try {
-            Connection con = DriverManager.getConnection(Db_url, "root", "");
-            String sql = "INSERT into stores_info (StoreName, StoreOwnerName, PhoneNumber, Address, Password)" +
-                    "VALUES(?,?,?,?,?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1,model.storeName);
-            stmt.setString(2,model.storeOwnerName);
-            stmt.setString(3,model.phoneNumber);
-            stmt.setString(4,model.address);
-            stmt.setString(5,model.password);
-            return stmt.executeUpdate();
-        }catch(Exception exception){
-            exception.printStackTrace();
-            return 0;
-        }
-    }
-
-
-
-
+    // ADD ITEM TO storeReportList WHEN A USER BUYS AN ITEM FROM THE STORE
     void addSoldItemToReportList(double quantity,ItemModel itemModel, UserModel userModel){
         try{
 
@@ -315,65 +413,9 @@ class Repository {
         }
     }
 
+    // REMOVE ITEMS FROM DATABASE
 
-
-
-
-
-    void addBoughtItemToUserBuyList(double quantity,ItemModel itemModel, UserModel userModel){
-        try{
-            Connection con = DriverManager.getConnection(Db_url,"root","");
-            String sql = "INSERT into " + getUserBuyListName(userModel.getUserName()) +
-                    " (Item, Quantity, Price, `Type`, StoreName, BuyDate)" +
-                    "VALUES(?,?,?,?,?,?)";
-            PreparedStatement st = con.prepareStatement(sql);
-            st.setString(1,itemModel.getItem());
-            st.setDouble(2,quantity);
-            st.setDouble(3,itemModel.getPrice());
-            st.setString(4,itemModel.getType());
-            st.setString(5,itemModel.getStoreName());
-            st.setObject(6,new Timestamp((new Date()).getTime()));
-            st.execute();
-        }catch (Exception exception){
-            exception.printStackTrace();
-        }
-    }
-
-
-
-    void addBoughtItemToUserDeliveredList(ResultSet rs, String userName,Connection con){
-        try{
-            String sql = "INSERT into " + getUserDeliveredListName(userName) +
-                    " (Item, Quantity, Price, `Type`, StoreName, BuyDate)" +
-                    "VALUES(?,?,?,?,?,?)";
-            PreparedStatement st = con.prepareStatement(sql);
-            st.setString(1,rs.getString("Item"));
-            st.setDouble(2,rs.getDouble("Quantity"));
-            st.setDouble(3,rs.getDouble("Price"));
-            st.setString(4,rs.getString("Type"));
-            st.setString(5,rs.getString("StoreName"));
-            st.setObject(6,rs.getTimestamp("BuyDate"));
-            st.execute();
-        }catch (Exception exception){
-            exception.printStackTrace();
-        }
-    }
-
-    // ADD ITEM TO USER WISH LIST
-    int addItemToWishList(ItemModel itemModel,String userName){
-        try{
-            Connection con = DriverManager.getConnection(Db_url, "root", "");
-            String sql = "INSERT into " + getWishListName(userName) + " (Item,StoreName)" + " VALUES(?,?)";
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1,itemModel.getItem().toLowerCase());
-            stmt.setString(2,itemModel.getStoreName());
-            return stmt.executeUpdate();
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
-        return 0;
-    }
-
+    // REMOVE ITEMS FROM USER BUY LIST AFTER DELIVERY TIME HAS PASSED
     void removeBoughtItemFromUserBuyList(int id, String userName,Connection con){
         try{
             String sql = "DELETE FROM " + getUserBuyListName(userName) +
@@ -409,27 +451,7 @@ class Repository {
         return 0;
     }
 
-    private final int DELIVERY_TIME = 10; // Delivery Time in Minutes
-    // TO CHANGE DELIVERY TIME, CHANGE THE {DELIVERY_TIME} CONSTANT ABOVE
-    // CHECK WHETHER THE ITEMS HAVE BEEN DELIVERED TO THE USER
-    // AND CALL METHODS TO UPDATE THE TABLES RESPECTIVELY
-    void deliverItemsToUser(String userName){
-        try{
-            Connection con = DriverManager.getConnection(Db_url,"root","");
-            String sql = "SELECT * from " + getUserBuyListName(userName);
-            PreparedStatement st = con.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while(rs.next()){
-                if((DateStuff.getIntegerTime(rs.getTimestamp("BuyDate").toString()) + DELIVERY_TIME) <
-                        DateStuff.getIntegerTime((new Timestamp((new Date()).getTime())).toString().substring(0,19))){
-                    addBoughtItemToUserDeliveredList(rs,userName,con);
-                    removeBoughtItemFromUserBuyList(rs.getInt("Id"),userName,con);
-                }
-            }
-        }catch(Exception exception){
-            exception.printStackTrace();
-        }
-    }
+
 
     // NEW ACCOUNT TABLE CREATIONS
 
@@ -658,7 +680,7 @@ class Repository {
         return false;
     }
 
-    // VALIDATE USER lOGIN
+    // VALIDATE USER LOGIN
     boolean checkUserValidity(String Username, String password){
         try{
             Connection con = DriverManager.getConnection(Db_url, "root", "");
